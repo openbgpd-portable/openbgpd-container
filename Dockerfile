@@ -16,7 +16,7 @@
 
 FROM alpine:latest
 
-LABEL maintainer="Robert Scheck <https://github.com/robert-scheck/openbgpd-container>" \
+LABEL maintainer="Robert Scheck <https://github.com/openbgpd-portable/openbgpd-container>" \
       description="OpenBGPD Routing Daemon" \
       org.opencontainers.image.title="openbgpd" \
       org.opencontainers.image.description="OpenBGPD Routing Daemon" \

@@ -28,9 +28,9 @@ podman run --name openbgpd \
 
 ## Volumes
 
-  * `/etc/bgpd/` - Directory for the OpenBGPD configuration file `bgpd.conf` that `bgpd` will load by default. An example can be [downloaded separately](https://github.com/openbgpd-portable/openbgpd-openbsd/blob/master/src/etc/examples/bgpd.conf).
-  * `/run/bgpd/` - Directory that contains the Unix domain socket for remote control of OpenBGPD using `bgpctl` (which is also part of this OCI image).
-  * `/var/lib/rpki-client/` - Directory using which Validated ROA Payloads (VRPs) from [rpki-client](https://www.rpki-client.org/) can be passed to OpenBGPD.
+  * `/etc/bgpd` - Directory for the OpenBGPD configuration file `bgpd.conf` that `bgpd` will load by default. An example can be [downloaded separately](https://github.com/openbgpd-portable/openbgpd-openbsd/blob/master/src/etc/examples/bgpd.conf).
+  * `/run/bgpd` - Directory that contains the Unix domain socket for remote control of OpenBGPD using `bgpctl` (which is also part of this OCI image).
+  * `/var/lib/rpki-client` - Directory using which Validated ROA Payloads (VRPs) from [rpki-client](https://www.rpki-client.org/) can be passed to OpenBGPD.
 
 While none of the volumes is required, meaningful usage requires at least a proper `bgpd.conf` configuration file via `/etc/bgpd`.
 
