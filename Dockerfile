@@ -42,9 +42,9 @@ RUN set -x && \
   chmod +x /entrypoint.sh /healthcheck.sh
 
 RUN set -x && \
-  export BUILDREQ="git autoconf automake libtool signify build-base bison libmnl-dev" && \
+  export BUILDREQ="git autoconf automake libtool signify build-base bison libevent-dev libmnl-dev" && \
   apk --no-cache upgrade && \
-  apk --no-cache add ${BUILDREQ} libmnl tzdata tini && \
+  apk --no-cache add ${BUILDREQ} libevent libmnl tzdata tini && \
   cd /tmp && \
   if [ -z "${PORTABLE_GIT}" -a -z "${PORTABLE_COMMIT}" -a -z "${OPENBSD_GIT}" -a -z "${OPENBSD_COMMIT}" ]; then \
     wget https://ftp.openbsd.org/pub/OpenBSD/OpenBGPD/openbgpd-${VERSION}.tar.gz && \
