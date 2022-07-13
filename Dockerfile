@@ -62,6 +62,7 @@ RUN set -x && \
     git checkout ${OPENBSD_COMMIT:-master} && \
     rm -rf .git && \
     cd .. && \
+    wget https://github.com/openbgpd-portable/openbgpd-portable/commit/b6acfbb8cc625a6b4324b78f89a285e972f12493.patch -O - | tee /dev/stderr | patch -p1 && \
     ./autogen.sh; \
   fi && \
   ./configure \
