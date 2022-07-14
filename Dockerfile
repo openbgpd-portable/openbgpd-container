@@ -68,7 +68,8 @@ RUN set -x && \
     --prefix=/usr \
     --sysconfdir=/etc/bgpd \
     --runstatedir=/run/bgpd \
-    --with-privsep-user=bgpd && \
+    --with-privsep-user=bgpd \
+    --enable-netlink && \
   make V=1 && \
   addgroup \
     -g 101 \
