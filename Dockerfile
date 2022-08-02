@@ -31,7 +31,7 @@ LABEL maintainer="Robert Scheck <https://github.com/openbgpd-portable/openbgpd-c
       org.label-schema.usage="https://man.openbsd.org/bgpd" \
       org.label-schema.vcs-url="https://github.com/openbgpd-portable"
 
-ARG VERSION=7.4
+ARG VERSION=7.5
 ARG PORTABLE_GIT
 ARG PORTABLE_COMMIT
 ARG OPENBSD_GIT
