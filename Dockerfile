@@ -31,7 +31,7 @@ LABEL maintainer="Robert Scheck <https://github.com/openbgpd-portable/openbgpd-c
       org.label-schema.usage="https://man.openbsd.org/bgpd" \
       org.label-schema.vcs-url="https://github.com/openbgpd-portable"
 
-ARG VERSION=7.5
+ARG VERSION=7.6
 ARG PORTABLE_GIT
 ARG PORTABLE_COMMIT
 ARG OPENBSD_GIT
@@ -69,7 +69,7 @@ RUN set -x && \
     --sysconfdir=/etc/bgpd \
     --runstatedir=/run/bgpd \
     --with-privsep-user=bgpd \
-    --disable-netlink && \
+    --enable-netlink && \
   make V=1 && \
   addgroup \
     -g 101 \
