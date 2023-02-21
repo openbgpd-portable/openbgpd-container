@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 2020-2022 Robert Scheck <robert@fedoraproject.org>
+# Copyright (c) 2020-2023 Robert Scheck <robert@fedoraproject.org>
 #
 # Permission to use, copy, modify, and distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -26,7 +26,7 @@ trap cleanup INT TERM
 
 # Check if first argument is a flag, but only works if all arguments require
 # a hyphenated flag: -v; -SL; -f arg; etc. will work, but not arg1 arg2
-if [ "$#" -eq 0 -o "${1#-}" != "$1" ]; then
+if [ "$#" -eq 0 ] || [ "${1#-}" != "$1" ]; then
   set -- bgpd "$@"
 fi
 

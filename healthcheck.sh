@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 2020-2022 Robert Scheck <robert@fedoraproject.org>
+# Copyright (c) 2020-2023 Robert Scheck <robert@fedoraproject.org>
 #
 # Permission to use, copy, modify, and distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -19,8 +19,7 @@ set -e
 [ -n "${DEBUG}" ] && set -x
 
 if [ -f /tmp/bgpd.daemon-expected ]; then
-  PID=$(pidof -s bgpd 2> /dev/null)
-  [ -n "${PID}" -a -d "/proc/${PID}" ] && exit 0 || exit 1
+  pidof bgpd > /dev/null
 fi
 
 exit 0
