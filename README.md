@@ -3,6 +3,7 @@
 [![Build OCI image](https://github.com/openbgpd-portable/openbgpd-container/actions/workflows/image.yml/badge.svg)](https://github.com/openbgpd-portable/openbgpd-container/actions/workflows/image.yml)
 [![Docker pulls](https://img.shields.io/docker/pulls/openbgpd/openbgpd.svg)](https://hub.docker.com/r/openbgpd/openbgpd)
 [![OCI image size](https://img.shields.io/docker/image-size/openbgpd/openbgpd/latest.svg)](https://hub.docker.com/r/openbgpd/openbgpd/tags)
+[![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/openbgpd-portable/openbgpd-container)](https://www.codefactor.io/repository/github/openbgpd-portable/openbgpd-container)
 [![Latest version](https://img.shields.io/docker/v/openbgpd/openbgpd.svg?sort=semver)](https://hub.docker.com/r/openbgpd/openbgpd/tags)
 
 ## About
