@@ -47,19 +47,19 @@ RUN set -x && \
   apk --no-cache add ${BUILDREQ} libevent libmnl tzdata tini && \
   cd /tmp && \
   if [ -z "${PORTABLE_GIT}" -a -z "${PORTABLE_COMMIT}" -a -z "${OPENBSD_GIT}" -a -z "${OPENBSD_COMMIT}" ]; then \
-    wget https://ftp.openbsd.org/pub/OpenBSD/OpenBGPD/openbgpd-${VERSION}.tar.gz && \
+    wget "https://ftp.openbsd.org/pub/OpenBSD/OpenBGPD/openbgpd-${VERSION}.tar.gz" && \
     wget https://ftp.openbsd.org/pub/OpenBSD/OpenBGPD/SHA256.sig && \
-    signify -C -p /openbgpd.pub -x SHA256.sig openbgpd-${VERSION}.tar.gz && \
-    tar xfz openbgpd-${VERSION}.tar.gz && \
-    rm -f openbgpd-${VERSION}.tar.gz && \
-    cd openbgpd-${VERSION}; \
+    signify -C -p /openbgpd.pub -x SHA256.sig "openbgpd-${VERSION}.tar.gz" && \
+    tar xfz "openbgpd-${VERSION}.tar.gz" && \
+    rm -f "openbgpd-${VERSION}.tar.gz" && \
+    cd "openbgpd-${VERSION}"; \
   else \
-    git clone ${PORTABLE_GIT:-https://github.com/openbgpd-portable/openbgpd-portable.git} && \
+    git clone "${PORTABLE_GIT:-https://github.com/openbgpd-portable/openbgpd-portable.git}" && \
     cd openbgpd-portable && \
-    git checkout ${PORTABLE_COMMIT:-master} && \
-    git clone ${OPENBSD_GIT:-https://github.com/openbgpd-portable/openbgpd-openbsd.git} openbsd && \
+    git checkout "${PORTABLE_COMMIT:-master}" && \
+    git clone "${OPENBSD_GIT:-https://github.com/openbgpd-portable/openbgpd-openbsd.git}" openbsd && \
     cd openbsd && \
-    git checkout ${OPENBSD_COMMIT:-master} && \
+    git checkout "${OPENBSD_COMMIT:-master}" && \
     rm -rf .git && \
     cd .. && \
     ./autogen.sh; \
@@ -90,7 +90,7 @@ RUN set -x && \
     -i /etc/bgpd/bgpd.conf && \
   install -D -m 0644 /dev/null /var/lib/rpki-client/openbgpd && \
   cd .. && \
-  rm -rf ${OLDPWD} /openbgpd.pub SHA256.sig && \
+  rm -rf "${OLDPWD}" /openbgpd.pub SHA256.sig && \
   apk --no-cache del ${BUILDREQ} && \
   bgpd -V
 
