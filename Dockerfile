@@ -54,14 +54,10 @@ RUN set -x && \
     rm -f "openbgpd-${VERSION}.tar.gz" && \
     cd "openbgpd-${VERSION}"; \
   else \
-    git clone "${PORTABLE_GIT:-https://github.com/openbgpd-portable/openbgpd-portable.git}" && \
+    git clone -b "${PORTABLE_COMMIT:-master}" --single-branch "${PORTABLE_GIT:-https://github.com/openbgpd-portable/openbgpd-portable.git}" && \
     cd openbgpd-portable && \
-    git checkout "${PORTABLE_COMMIT:-master}" && \
-    git clone "${OPENBSD_GIT:-https://github.com/openbgpd-portable/openbgpd-openbsd.git}" openbsd && \
-    cd openbsd && \
-    git checkout "${OPENBSD_COMMIT:-master}" && \
-    rm -rf .git && \
-    cd .. && \
+    git clone -b "${OPENBSD_COMMIT:-master}" --single-branch "${OPENBSD_GIT:-https://github.com/openbgpd-portable/openbgpd-openbsd.git}" openbsd && \
+    rm -rf openbsd/.git/ && \
     ./autogen.sh; \
   fi && \
   ./configure \
