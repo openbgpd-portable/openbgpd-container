@@ -64,7 +64,8 @@ RUN set -x && \
     --prefix=/usr \
     --sysconfdir=/etc/bgpd \
     --runstatedir=/run/bgpd \
-    --with-privsep-user=bgpd && \
+    --with-privsep-user=bgpd \
+    --with-bgplgd-user=bgplgd && \
   make V=1 && \
   addgroup \
     -g 101 \
@@ -78,6 +79,17 @@ RUN set -x && \
     -D \
     -u 100 \
     bgpd && \
+  addgroup \
+    -g 102 \
+    -S \
+    bgplgd && \
+  adduser \
+    -g "OpenBGPD Looking Glass" \
+    -G bgplgd \
+    -S \
+    -D \
+    -u 101 \
+    bgplgd && \
   make install-strip INSTALL='install -p' && \
   chown root:root /var/empty/bgpd && \
   chmod 0711 /var/empty/bgpd && \
