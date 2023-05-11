@@ -39,7 +39,7 @@ ARG OPENBSD_COMMIT
 
 COPY openbgpd.pub entrypoint.sh healthcheck.sh /
 RUN set -x && \
-  chmod +x /entrypoint.sh /healthcheck.sh
+  chmod 0755 /entrypoint.sh /healthcheck.sh
 
 RUN set -x && \
   export BUILDREQ="git autoconf automake libtool signify build-base bison libevent-dev libmnl-dev" && \
