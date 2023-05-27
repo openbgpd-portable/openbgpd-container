@@ -15,8 +15,7 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-set -e
-[ -n "${DEBUG}" ] && set -x
+set -e ${DEBUG:+-x}
 
 # Catch container interruption signals to remove hint file for health script
 cleanup() {

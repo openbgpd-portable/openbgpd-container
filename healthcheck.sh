@@ -15,11 +15,8 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-set -e
-[ -n "${DEBUG}" ] && set -x
+set -e ${DEBUG:+-x}
 
-if [ -f /tmp/bgpd.daemon-expected ]; then
-  pidof bgpd > /dev/null
-fi
+[ -f /tmp/bgpd.daemon-expected ] && pidof bgpd > /dev/null
 
 exit 0
