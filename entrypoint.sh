@@ -31,7 +31,10 @@ fi
 
 # Check for the expected command
 if [ "$1" = 'bgpd' ]; then
-  [ "$2" != '-V' ] && touch /tmp/bgpd.daemon-expected
+  if [ "$2" != '-V' ]; then
+    touch /tmp/bgpd.daemon-expected
+    exec multirun ${DEBUG:+-v} "$*"
+  fi
 fi
 
 # Default to run whatever the user wanted, e.g. "sh"

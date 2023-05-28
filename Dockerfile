@@ -37,26 +37,25 @@ ARG PORTABLE_COMMIT
 ARG OPENBSD_GIT
 ARG OPENBSD_COMMIT
 
-COPY openbgpd.pub entrypoint.sh healthcheck.sh /
+COPY entrypoint.sh healthcheck.sh openbgpd.pub /
 RUN set -x && \
   chmod 0755 /entrypoint.sh /healthcheck.sh
 
 RUN set -x && \
   export BUILDREQ="git autoconf automake libtool signify build-base bison libevent-dev libmnl-dev" && \
   apk --no-cache upgrade && \
-  apk --no-cache add ${BUILDREQ} libevent libmnl tzdata tini && \
-  cd /tmp && \
+  apk --no-cache add ${BUILDREQ} libevent libmnl multirun tzdata && \
+  cd /tmp/ && \
   if [ -z "${PORTABLE_GIT}" -a -z "${PORTABLE_COMMIT}" -a -z "${OPENBSD_GIT}" -a -z "${OPENBSD_COMMIT}" ]; then \
     wget "https://ftp.openbsd.org/pub/OpenBSD/OpenBGPD/openbgpd-${VERSION}.tar.gz" && \
     wget https://ftp.openbsd.org/pub/OpenBSD/OpenBGPD/SHA256.sig && \
     signify -C -p /openbgpd.pub -x SHA256.sig "openbgpd-${VERSION}.tar.gz" && \
     tar xfz "openbgpd-${VERSION}.tar.gz" && \
-    rm -f "openbgpd-${VERSION}.tar.gz" && \
-    cd "openbgpd-${VERSION}"; \
+    cd "openbgpd-${VERSION}/"; \
   else \
     git clone -b "${PORTABLE_COMMIT:-master}" --single-branch "${PORTABLE_GIT:-https://github.com/openbgpd-portable/openbgpd-portable.git}" && \
-    cd openbgpd-portable && \
-    git clone -b "${OPENBSD_COMMIT:-master}" --single-branch "${OPENBSD_GIT:-https://github.com/openbgpd-portable/openbgpd-openbsd.git}" openbsd && \
+    cd openbgpd-portable/ && \
+    git clone -b "${OPENBSD_COMMIT:-master}" --single-branch "${OPENBSD_GIT:-https://github.com/openbgpd-portable/openbgpd-openbsd.git}" openbsd/ && \
     rm -rf openbsd/.git/ && \
     ./autogen.sh; \
   fi && \
@@ -67,38 +66,17 @@ RUN set -x && \
     --with-privsep-user=bgpd \
     --with-bgplgd-user=bgplgd && \
   make V=1 && \
-  addgroup \
-    -g 101 \
-    -S \
-    bgpd && \
-  adduser \
-    -h /var/empty/bgpd \
-    -g "Privilege-separated BGP" \
-    -G bgpd \
-    -S \
-    -D \
-    -u 100 \
-    bgpd && \
-  addgroup \
-    -g 102 \
-    -S \
-    bgplgd && \
-  adduser \
-    -g "OpenBGPD Looking Glass" \
-    -G bgplgd \
-    -S \
-    -D \
-    -u 101 \
-    bgplgd && \
+  addgroup -g 900 -S bgpd && \
+  adduser -h /var/empty/bgpd -g "Privilege-separated BGP" -G bgpd -S -D -u 900 bgpd && \
+  addgroup -g 901 -S bgplgd && \
+  adduser -h /var/empty/bgpd -g "OpenBGPD Looking Glass" -G bgplgd -S -D -u 901 bgplgd && \
   make install-strip INSTALL='install -p' && \
-  chown root:root /var/empty/bgpd && \
-  chmod 0711 /var/empty/bgpd && \
-  sed \
-    -e 's|/var/db/rpki-client/openbgpd|/var/lib/rpki-client/openbgpd|' \
-    -i /etc/bgpd/bgpd.conf && \
+  chown root:root /var/empty/bgpd/ && \
+  chmod 0711 /var/empty/bgpd/ && \
+  sed -e 's|/var/db/rpki-client/openbgpd|/var/lib/rpki-client/openbgpd|' -i /etc/bgpd/bgpd.conf && \
   install -D -m 0644 /dev/null /var/lib/rpki-client/openbgpd && \
   cd .. && \
-  rm -rf "${OLDPWD}" /openbgpd.pub SHA256.sig && \
+  rm -rf openbgpd* /openbgpd.pub SHA256.sig && \
   apk --no-cache del ${BUILDREQ} && \
   bgpd -V
 
@@ -106,6 +84,6 @@ ENV TZ=UTC
 VOLUME ["/etc/bgpd/", "/run/bgpd/", "/var/lib/rpki-client/"]
 EXPOSE 179
 
-ENTRYPOINT ["/sbin/tini", "-g", "--", "/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["bgpd", "-d", "-v"]
 HEALTHCHECK CMD ["/healthcheck.sh"]
