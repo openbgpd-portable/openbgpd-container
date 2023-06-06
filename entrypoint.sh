@@ -32,8 +32,16 @@ fi
 # Check for the expected command
 if [ "$1" = 'bgpd' ]; then
   if [ "$2" != '-V' ]; then
+    # If absent, re-add restricted bgpd socket for bgplgd to configuration
+    grep -q -E '^socket "/run/bgpd/bgpd.rsock" restricted' \
+      /etc/bgpd/bgpd.conf || echo -e '\n# restricted bgpd socket' \
+        'for bgplgd\nsocket "/run/bgpd/bgpd.rsock" restricted' >> \
+        /etc/bgpd/bgpd.conf
+
+    # Actually run bgpd, bgplgd, haproxy and handle health script
     touch /tmp/bgpd.daemon-expected
-    exec multirun ${DEBUG:+-v} "$*"
+    exec multirun ${DEBUG:+-v} "$*" 'bgplgd -d' \
+      'haproxy -f /etc/haproxy/haproxy.cfg -q'
   fi
 fi
 

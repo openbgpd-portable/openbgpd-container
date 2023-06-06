@@ -47,6 +47,7 @@ While none of the volumes is required, meaningful usage requires at least a prop
 ## Exposed Ports
 
   * `179` - TCP port for inbound BGP sessions.
+  * `9099` - [TCP port](https://datatracker.ietf.org/doc/html/draft-richih-opsawg-openmetrics-00#section-7) for optional statistics in OpenMetrics format via HTTP endpoint `/metrics` and simple web API to query `bgpd`.
 
 ## Custom images
 
@@ -78,6 +79,6 @@ Each commit to a Git branch triggers the workflow and leads to OCI images being 
 
 This project is licensed under the ISC License - see the [LICENSE](LICENSE) file for details.
 
-As with all OCI images, these also contain other software under other licenses (such as BusyBox etc. from the base distribution, along with any direct or indirect dependencies of the contained OpenBGPD).
+As with all OCI images, these also contain other software under other licenses (such as BusyBox, HAProxy etc. from the base distribution, along with any direct or indirect dependencies of the contained OpenBGPD).
 
 As for any pre-built image usage, it is the image user's responsibility to ensure that any use of this image complies with any relevant licenses for all software contained within.

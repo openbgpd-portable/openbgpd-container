@@ -37,14 +37,14 @@ ARG PORTABLE_COMMIT
 ARG OPENBSD_GIT
 ARG OPENBSD_COMMIT
 
-COPY entrypoint.sh healthcheck.sh openbgpd.pub /
+COPY entrypoint.sh haproxy.cfg healthcheck.sh openbgpd.pub /
 RUN set -x && \
   chmod 0755 /entrypoint.sh /healthcheck.sh
 
 RUN set -x && \
   export BUILDREQ="git autoconf automake libtool signify build-base bison libevent-dev libmnl-dev" && \
   apk --no-cache upgrade && \
-  apk --no-cache add ${BUILDREQ} libevent libmnl multirun tzdata && \
+  apk --no-cache add ${BUILDREQ} haproxy libevent libmnl multirun tzdata && \
   cd /tmp/ && \
   if [ -z "${PORTABLE_GIT}" -a -z "${PORTABLE_COMMIT}" -a -z "${OPENBSD_GIT}" -a -z "${OPENBSD_COMMIT}" ]; then \
     wget "https://ftp.openbsd.org/pub/OpenBSD/OpenBGPD/openbgpd-${VERSION}.tar.gz" && \
@@ -64,25 +64,29 @@ RUN set -x && \
     --sysconfdir=/etc/bgpd \
     --runstatedir=/run/bgpd \
     --with-privsep-user=bgpd \
-    --with-bgplgd-user=bgplgd && \
+    --with-bgplgd-user=bgplgd \
+    --with-www-user=haproxy \
+    --with-wwwrunstatedir=/var/lib/haproxy/run && \
   make V=1 && \
   addgroup -g 900 -S bgpd && \
   adduser -h /var/empty/bgpd -g "Privilege-separated BGP" -G bgpd -S -D -u 900 bgpd && \
   addgroup -g 901 -S bgplgd && \
   adduser -h /var/empty/bgpd -g "OpenBGPD Looking Glass" -G bgplgd -S -D -u 901 bgplgd && \
   make install-strip INSTALL='install -p' && \
-  chown root:root /var/empty/bgpd/ && \
-  chmod 0711 /var/empty/bgpd/ && \
+  chown root:root /var/empty/bgpd/ /var/lib/haproxy/run/ && \
+  chmod 0711 /var/empty/bgpd/ /var/lib/haproxy/run/ && \
   sed -e 's|/var/db/rpki-client/openbgpd|/var/lib/rpki-client/openbgpd|' -i /etc/bgpd/bgpd.conf && \
+  echo -e '\n# restricted bgpd socket for bgplgd\nsocket "/run/bgpd/bgpd.rsock" restricted' >> /etc/bgpd/bgpd.conf && \
   install -D -m 0644 /dev/null /var/lib/rpki-client/openbgpd && \
   cd .. && \
   rm -rf openbgpd* /openbgpd.pub SHA256.sig && \
   apk --no-cache del ${BUILDREQ} && \
+  mv -f /haproxy.cfg /etc/haproxy/haproxy.cfg && \
   bgpd -V
 
 ENV TZ=UTC
 VOLUME ["/etc/bgpd/", "/run/bgpd/", "/var/lib/rpki-client/"]
-EXPOSE 179
+EXPOSE 179 9099
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["bgpd", "-d", "-v"]
