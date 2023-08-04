@@ -38,6 +38,10 @@ if [ "$1" = 'bgpd' ]; then
         'for bgplgd\nsocket "/run/bgpd/bgpd.rsock" restricted' >> \
         /etc/bgpd/bgpd.conf
 
+    # Remove IPv6 bind if host system disabled IPv6 support completely
+    [ -f /proc/net/if_inet6 ] || sed -e '/^[[:space:]]*bind \[::\]:/d' \
+                                     -i /etc/haproxy/haproxy.cfg
+
     # Actually run bgpd, bgplgd, haproxy and handle health script
     touch /tmp/bgpd.daemon-expected
     exec multirun ${DEBUG:+-v} "$*" 'bgplgd -d' \
