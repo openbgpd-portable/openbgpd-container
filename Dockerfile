@@ -51,7 +51,9 @@ RUN set -x && \
     wget https://ftp.openbsd.org/pub/OpenBSD/OpenBGPD/SHA256.sig && \
     signify -C -p /openbgpd.pub -x SHA256.sig "openbgpd-${VERSION}.tar.gz" && \
     tar xfz "openbgpd-${VERSION}.tar.gz" && \
-    cd "openbgpd-${VERSION}/"; \
+    cd "openbgpd-${VERSION}/" && \
+    wget https://github.com/openbgpd-portable/openbgpd-portable/commit/5d1c8b0c85f3a6ae41fdd970238b3a3337af6a46.patch -O - | tee /dev/stderr | patch -p1 && \
+    autoreconf -i -f; \
   else \
     git clone -b "${PORTABLE_COMMIT:-master}" --single-branch "${PORTABLE_GIT:-https://github.com/openbgpd-portable/openbgpd-portable.git}" && \
     cd openbgpd-portable/ && \
